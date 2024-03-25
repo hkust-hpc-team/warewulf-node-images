@@ -12,5 +12,5 @@ With that in place, the container may be built with Podman.
 
 ```shell
 
-podman build . --volume $PWD:/mnt:ro --file Containerfile
+podman build . --volume $PWD:/mnt:ro,z --file Containerfile
 ```
