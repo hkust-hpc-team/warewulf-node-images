@@ -1,4 +1,4 @@
-FROM ghcr.io/warewulf/warewulf-rockylinux:9.2
+FROM ghcr.io/warewulf/warewulf-rockylinux:9.3
 
 RUN dnf -y install \
         gcc \
@@ -17,9 +17,15 @@ RUN dnf -y install \
         perl-sigtrap \
         numactl-libs \
         tcsh \
+        libnl3 \
     && dnf -y remove $(dnf repoquery --installonly --latest-limit=-1 -q) \
     && dnf clean all
 
-RUN (cd /tmp && tar -xf /mnt/MLNX_OFED_LINUX-5.8-3.0.7.0-rhel9.2-x86_64.tgz) \
-    && (cd /tmp/MLNX_OFED_LINUX-5.8-3.0.7.0-rhel9.2-x86_64 && ./mlnxofedinstall --distro rhel9.2 --skip-repo --kernel $(rpm -q kernel-core --qf '%{version}-%{release}.%{arch}\n' | tail -n 1) --add-kernel-support --hpc) \
+RUN (cd /tmp && tar -xf /mnt/MLNX_OFED_LINUX-5.8-4.1.5.0-rhel9.3-x86_64.tgz) \
+    && (cd /tmp/MLNX_OFED_LINUX-5.8-4.1.5.0-rhel9.3-x86_64 && ./mlnxofedinstall --distro rhel9.3 --skip-repo --kernel $(rpm -q kernel-core --qf '%{version}-%{release}.%{arch}\n' | tail -n 1) --add-kernel-support --hpc) \
     && rm -rf /tmp/MLNX_OFED_LINUX*
+
+RUN dnf -y install \
+        elrepo-release \
+    && dnf -y install nvidia-detect \
+    && dnf -y install $(nvidia-detect)
